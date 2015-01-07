@@ -1,11 +1,3 @@
-/* ---- begin test harness ---- */
-if (typeof module !== 'undefined' && module.exports) {
-   var atob = require("../test/node_modules/atob"),
-        _ =  require("../test/node_modules/underscore");
-}
-/* ---- end test harness ---- */
-
-
 Tamper = {}
 Tamper.biterate = function(encoded){
   var binary = atob(encoded),
