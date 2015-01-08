@@ -86,7 +86,7 @@ Tamper.unpackNumericEncoding = function(element, num_items) {
   var bitArray = Tamper.biterate(element.pack),
       item_window_width = element.item_window_width,
 			precision = element.precision,
-			minVal = element.min,
+			delta = element.delta,
 			precision = element.precision,
 			divider = Math.pow(10, precision),
       bytes_to_consume = consumeNum(bitArray,32),
@@ -100,7 +100,7 @@ Tamper.unpackNumericEncoding = function(element, num_items) {
   while(i < num_items) {
     bit_window = bitArray.slice(i * item_window_width, (i * item_window_width) + item_window_width);
 		val = parseInt(bit_window.join(''),2);
-		output[i] = val > 0 ? roundPrecision((val + minVal - 1) / divider, precision) : null;
+		output[i] = val > 0 ? roundPrecision((val + delta - 1) / divider, precision) : null;
     i++;
   }
 
