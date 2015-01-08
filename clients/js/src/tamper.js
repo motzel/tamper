@@ -78,6 +78,36 @@ Tamper.unpackExistence = function(element,default_attrs){
   return ba;
 }
 
+Tamper.unpackNumericEncoding = function(element, num_items) {
+  var consumeNum = function(array,n){
+        var num = parseInt(array.splice(0,n).join(""),2);
+        return num;
+      }
+  var bitArray = Tamper.biterate(element.pack),
+      item_window_width = element.item_window_width,
+			precision = element.precision,
+			minVal = element.min,
+			precision = element.precision,
+			divider = Math.pow(10, precision),
+      bytes_to_consume = consumeNum(bitArray,32),
+      bits_to_consume = consumeNum(bitArray,8);
+  var i = 0,val,output = [];
+	
+	function roundPrecision(num, dec) {
+    return Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+}
+
+  while(i < num_items) {
+    bit_window = bitArray.slice(i * item_window_width, (i * item_window_width) + item_window_width);
+		val = parseInt(bit_window.join(''),2);
+		output[i] = val > 0 ? roundPrecision((val + minVal - 1) / divider, precision) : null;
+    i++;
+  }
+
+  return output;
+}
+
+
 Tamper.unpackIntegerEncoding = function(element, num_items) {
   if(typeof(callback) === "undefined"){callback = false}
   var consumeNum = function(array,n){
@@ -87,7 +117,7 @@ Tamper.unpackIntegerEncoding = function(element, num_items) {
   var bitArray = Tamper.biterate(element.pack),
       bit_window_width = element.bit_window_width,
       item_window_width = element.item_window_width,
-      item_chunks = item_window_width/bit_window_width;
+      item_chunks = item_window_width/bit_window_width,
       bytes_to_consume = consumeNum(bitArray,32),
       bits_to_consume = consumeNum(bitArray,8);
   var getPossibility = function(i){
@@ -159,6 +189,9 @@ Tamper.unpackData = function(data,default_attrs){
           break;
         case 'integer':
           var attr_array = Tamper.unpackIntegerEncoding(a, exists.length);
+          break;
+				case 'numeric':
+          var attr_array = Tamper.unpackNumericEncoding(a, exists.length);
           break;
         default:  // attr does not contain a pack or is an unknown encoding
           return;
