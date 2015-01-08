@@ -127,7 +127,7 @@ Tamper.unpackIntegerEncoding = function(element, num_items) {
         return element.possibilities[i - 1]
     }
   }
-  var i = 0,output = [];
+  var i = 0,output = [],possibility_id;
 
   while(i < num_items) {
     bit_window = bitArray.slice(i * item_window_width, (i * item_window_width) + item_window_width);
