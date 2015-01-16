@@ -150,20 +150,15 @@ class Tamper
    * Encode GUIDs using Existence pack method
    * @see https://github.com/NYTimes/tamper/wiki/Packs
    *
-   * @param array $arr array of guids
-   * @param bool $sorted true if guids array is sorted, false (default) otherwise
+   * @param array $arr array of guids, has to be sorted
    * @return string Base64 encoded string
    */
-  public function packExistence(array $arr, $sorted = false)
+  public function packExistence(array $arr)
   {
     $encodingSet = array();
     $currentChunk = array();
     $lastGuid = -1;
     $runCounter = 0;
-
-    if (!$sorted) {
-      sort($arr, SORT_NUMERIC);
-    }
 
     foreach ($arr as $guid) {
       $diff = $guid - $lastGuid;
